@@ -1,0 +1,80 @@
+/* --- BASE Y FONDO --- */
+body {
+    background: #87CEEB url('https://images.unsplash.com/photo-1513002749550-c59d786b8e6c?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
+    background-size: cover;
+    margin: 0;
+    padding: 60px 0;
+    display: flex;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+}
+
+.contenedor-principal { width: 95%; max-width: 1050px; }
+
+/* --- HEADER COMPACTO --- */
+.header-especial { display: flex; align-items: flex-end; margin-bottom: -1px; position: relative; z-index: 10; }
+.montana-velas {
+    background: #34495e; padding: 5px 20px; border-radius: 15px 15px 0 0;
+    border: 1.5px solid #7f8c8d; border-bottom: none;
+    box-shadow: -5px -5px 15px rgba(0, 162, 255, 0.3);
+}
+.montana-velas img { height: 50px; display: block; filter: drop-shadow(0 0 8px rgba(255, 165, 0, 0.6)); }
+.banner-titulo {
+    background: linear-gradient(180deg, #465a6e 0%, #2c3e50 100%);
+    flex-grow: 1; margin-left: -15px; padding: 8px 25px;
+    border-radius: 15px 15px 0 0; border: 1.5px solid #7f8c8d; border-bottom: none;
+    display: flex; justify-content: space-between; align-items: center;
+}
+.titulo-web { color: #f1f1f1; font-family: 'Georgia', serif; font-style: italic; font-size: 1.6rem; margin: 0; }
+.header-container { display: flex; align-items: center; gap: 15px; }
+.header-image { height: 40px; width: auto; }
+
+/* --- CUERPO --- */
+.cuerpo-gris {
+    background: linear-gradient(180deg, #2c3e50 0%, #1a252f 100%);
+    border: 1.5px solid #7f8c8d; border-radius: 0 0 15px 15px;
+    padding: 25px; box-shadow: 0 0 40px rgba(0, 140, 255, 0.7);
+}
+
+/* --- HOME (VELAS) --- */
+.grid-velas { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 25px; }
+.grid-inferior { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 25px; }
+.card {
+    background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px; overflow: hidden; text-align: center; cursor: pointer; transition: 0.3s;
+}
+.card:hover { transform: translateY(-5px); border-color: #00a2ff; }
+.card-header h3 { background: rgba(52, 152, 219, 0.4); color: white; font-size: 0.85rem; padding: 6px; margin: 0; }
+.card img { width: 100%; height: 120px; object-fit: cover; }
+.card p { color: #cfd8dc; font-size: 0.75rem; padding: 10px; margin: 0; }
+
+/* --- PASARELA DE PAGO --- */
+.pasarela-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 30px; }
+.seccion-tit { border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; font-size: 1.2rem; color: #ffffff; margin-top: 0; }
+
+.opcion-caja {
+    background: rgba(0,0,0,0.2); border: 1px solid #7f8c8d; padding: 12px;
+    margin-bottom: 10px; border-radius: 5px; display: flex; gap: 10px; cursor: pointer; color: white;
+}
+.opcion-caja.activa { border-color: #00a2ff; box-shadow: 0 0 15px rgba(0, 162, 255, 0.4); background: rgba(0, 162, 255, 0.05); }
+
+.grupo label { display: block; font-size: 0.8rem; color: #bdc3c7; margin: 10px 0 5px; }
+.grupo input, .grupo select {
+    width: 100%; background: rgba(0,0,0,0.4); border: 1px solid #7f8c8d;
+    color: #00a2ff; padding: 8px; border-radius: 4px;
+}
+.fila { display: flex; gap: 15px; }
+
+.footer-pasarela { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; }
+.btn-cancel { background: #bdc3c7; border: 1.5px solid #7f8c8d; padding: 10px 20px; cursor: pointer; border-radius: 4px; font-weight: bold; }
+.btn-pagar {
+    background: linear-gradient(180deg, #007bff 0%, #0056b3 100%);
+    color: white; border: none; padding: 12px 50px; font-size: 1.1rem; font-weight: bold;
+    box-shadow: 0 0 15px rgba(0, 162, 255, 0.5); cursor: pointer; border-radius: 4px;
+}
+
+/* --- VIDEO MODAL --- */
+#pantalla-video {
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.95); z-index: 10000; justify-content: center; align-items: center;
+}

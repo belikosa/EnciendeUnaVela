@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Pasarela de Pago - Enciende Una Vela</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Estilos para el video tipo Reel */
+        #capa-video {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #000;
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        #miVideo {
+            width: auto;
+            height: 85vh;
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+        }
+        .btn-cerrar-video {
+            margin-top: 20px; padding: 10px 25px; background: #fff;
+            color: #000; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;
+        }
+
+        /* Estilos para la zona del QR */
+        .contenedor-qr {
+            margin-top: 25px; padding: 15px; background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 162, 255, 0.3); border-radius: 10px; text-align: center;
+        }
+        .contenedor-qr h4 { color: #00a2ff; margin: 0 0 10px 0; font-size: 0.9rem; letter-spacing: 1px; }
+        .qr-frame { background: white; padding: 10px; display: inline-block; border-radius: 8px; }
+        #img-qr { width: 140px; height: 140px; display: block; }
+    </style>
+</head>
+<body>
+
+<div class="contenedor-principal">
+    <div class="header-especial">
+        <div class="montana-velas"><img src="assets/img/velaheader.png" alt="Header"></div>
+        <div class="banner-titulo"><h1 class="titulo-web" id="titulo-pago">Confirmación del pago</h1></div>
+    </div>
+
+    <div class="cuerpo-gris">
+        <div class="pasarela-grid">
+            <div class="col-metodos">
+                <h3 class="seccion-tit">Forma de pago</h3>
+                
+                <div class="opcion-caja activa" onclick="gestionarCambio(this, 'tarjeta')">
+                    <input type="radio" name="p" checked>
+                    <div class="txt"><strong>Pago con tarjeta</strong><p>Visa, Mastercard, Maestro</p></div>
+                </div>
+
+                <div class="opcion-caja" onclick="gestionarCambio(this, 'bizum')">
+                    <input type="radio" name="p">
+                    <div class="txt"><strong>Bizum</strong><p>Pago inmediato móvil</p></div>
+                </div>
+
+                <div class="opcion-caja" onclick="gestionarCambio(this, 'paypal')">
+                    <input type="radio" name="p">
+                    <div class="txt"><strong>PayPal</strong><p>Pago seguro online</p></div>
+                </div>
+
+                <div class="opcion-caja" onclick="gestionarCambio(this, 'bitcoin')">
+                    <input type="radio" name="p">
+                    <div class="txt"><strong>Bitcoin</strong><p>Pago con criptomonedas</p></div>
+                </div>
+            </div>
+
+            <div class="col-detalles">
+                <h3 class="seccion-tit">Detalle del pago</h3>
+                <div id="contenedor-formulario">
+                    <div class="grupo">
+                        <label>Tarjeta:</label>
+                        <input type="text" placeholder="0000 0000 0000 0000">
+                    </div>
+                    <div class="fila">
+                        <div class="grupo"><label>Caducidad:</label><input type="text" placeholder="MM/AA"></div>
+                        <div class="grupo"><label>CVV:</label><input type="password" placeholder="123"></div>
+                    </div>
+                </div>
+
+                <div class="contenedor-qr" id="zona-qr">
+                    <h4 id="texto-qr">OFRENDA</h4> 
+                    <div class="qr-frame">
+                        <img id="img-qr" src="" alt="Código QR">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-pasarela">
+            <button class="btn-cancel" onclick="window.location.href='home.html'">
+                <strong>CANCELAR</strong><br>Volver al inicio
+            </button>
+            <button class="btn-pagar" onclick="ejecutarPago()">PAGAR</button>
+        </div>
+    </div>
+</div>
+
+<div id="capa-video">
+    <video id="miVideo">
+        <source src="" type="video/mp4">
+    </video>
+    <button class="btn-cerrar-video" onclick="window.location.href='home.html'">TERMINAR Y VOLVER</button>
+</div>
+
+<script>
+    // Inicialización dinámica de QR y Títulos
+    window.onload = function() {
+        const params = new URLSearchParams(window.location.search);
+        let tipoVela = params.get('vela') || 'abundancia';
+        tipoVela = tipoVela.toLowerCase();
+        
+        // Títulos dinámicos
+        document.getElementById('titulo-pago').innerText = `Pago: Vela de ${tipoVela.toUpperCase()}`;
+        document.getElementById('texto-qr').innerText = `OFRENDA DE ${tipoVela.toUpperCase()}`;
+        
+        const imgQr = document.getElementById('img-qr');
+
+        // Lógica de asignación de QR (reutilización)
+        let archivoQR = tipoVela;
+
+        if (tipoVela === 'dinero' || tipoVela === 'amparo') {
+            archivoQR = 'abundancia'; // Estos usan el QR de abundancia
+        } else if (tipoVela === 'paz') {
+            archivoQR = 'amor'; // Paz usa el QR de amor (siguiendo la misma lógica)
+        }
+        // "amor", "abundancia" y "solidaria" se quedan con su propio nombre
+
+        imgQr.src = `assets/img/qr/qr_${archivoQR}.png`;
+
+        // Backup por si falla la carga local, genera uno genérico con Google API
+        imgQr.onerror = function() {
+            this.src = 'https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=' + encodeURIComponent("Ofrenda_" + tipoVela);
+        };
+    };
+
+    function gestionarCambio(elemento, metodo) {
+        document.querySelectorAll('.opcion-caja').forEach(c => c.classList.remove('activa'));
+        elemento.classList.add('activa');
+        elemento.querySelector('input').checked = true;
+
+        const container = document.getElementById('contenedor-formulario');
+        
+        if (metodo === 'bizum') {
+            container.innerHTML = '<div class="grupo"><label>Número de Teléfono:</label><input type="text" placeholder="600 000 000"></div>';
+        } else if (metodo === 'tarjeta') {
+            container.innerHTML = '<div class="grupo"><label>Tarjeta:</label><input type="text" placeholder="0000 0000 0000 0000"></div><div class="fila"><div class="grupo"><label>Caducidad:</label><input type="text" placeholder="MM/AA"></div><div class="grupo"><label>CVV:</label><input type="password" placeholder="123"></div></div>';
+        } else {
+            container.innerHTML = '<p style="color: #bdc3c7; margin-top: 20px;">Serás redirigido para completar el pago de forma segura a través de ' + metodo.toUpperCase() + '.</p>';
+        }
+    }
+
+    function ejecutarPago() {
+        const params = new URLSearchParams(window.location.search);
+        const tipoVela = params.get('vela') || 'abundancia'; 
+
+        const capa = document.getElementById('capa-video');
+        const video = document.getElementById('miVideo');
+
+        // Aquí sí busca el video específico (paz.mp4, dinero.mp4, etc.)
+        video.src = `assets/video/${tipoVela}.mp4`;
+        capa.style.display = 'flex';
+        video.load(); 
+        video.play();
+    }
+</script>
+</body>
+</html>
